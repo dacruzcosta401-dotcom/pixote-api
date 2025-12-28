@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><title>API</title></head><body><pre id="r">...</pre><script>
+const P='admin123';
+if(!localStorage.getItem('pk')){localStorage.setItem('pk',JSON.stringify([{key:"PIXOTE-8Y3Q-BZBX-CB6R",username:"Usuario",hwid:null,active:true,created:"29/12/2025",lastUse:"Nunca"}]));}
+const g=()=>JSON.parse(localStorage.getItem('pk')||'[]');
+const s=(k)=>localStorage.setItem('pk',JSON.stringify(k));
+const u=new URLSearchParams(location.search);
+const a=u.get('action'),k=u.get('key'),h=u.get('hwid');
+let o={};
+if(a==='validate'){
+if(!k||!h){o={valid:false,message:'Key/HWID faltando'};}else{
+const ks=g(),i=ks.findIndex(x=>x.key===k);
+if(i===-1){o={valid:false,message:'Key não encontrada'};}
+else if(!ks[i].active){o={valid:false,message:'Key desativada'};}
+else if(ks[i].hwid===null){ks[i].hwid=h;ks[i].lastUse=new Date().toLocaleString('pt-BR');s(ks);o={valid:true,message:'Key validada!',username:ks[i].username};}
+else if(ks[i].hwid!==h){o={valid:false,message:'Key em outro PC'};}
+else{ks[i].lastUse=new Date().toLocaleString('pt-BR');s(ks);o={valid:true,message:'Key válida!',username:ks[i].username};}
+}}else{o={error:'Use: ?action=validate&key=XXX&hwid=YYY'};}
+document.getElementById('r').textContent=JSON.stringify(o,null,2);
+</script></body></html>
